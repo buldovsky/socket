@@ -1,2 +1,2 @@
 # socket
-Sockets, websockets, proxy-sockets based on Amp (PHP Framework)
+Simple sockets, websockets, proxy-sockets based on Amp (PHP Framework)
