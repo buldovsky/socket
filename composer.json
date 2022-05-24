@@ -1,0 +1,38 @@
+{
+    "name": "bumax/socket",
+    "description": "",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Max Buldovsky",
+            "email": "max@buldovsky.ru"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "ext-pcntl": "*",
+        "amphp/socket": "^1.1",
+        "amphp/http-client": "^4.5",
+        "amphp/websocket-server": "^2.0",
+        "amphp/websocket-client": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bumax\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "amphp/phpunit-util": "^2.0",
+        "vimeo/psalm": "^4.22",
+        "symfony/console": "^5.4",
+        "symfony/process": "^5.4"
+    }
+}
