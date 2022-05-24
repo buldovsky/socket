@@ -1,6 +1,6 @@
 {
     "name": "bumax/socket",
-    "description": "",
+    "description": "Simple sockets, websockets, proxy-sockets based on PHP Amp framework",
     "license": "proprietary",
     "authors": [
         {
