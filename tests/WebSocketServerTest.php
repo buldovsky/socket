@@ -3,21 +3,21 @@ namespace Tests\Socket;
 
 use Amp\PHPUnit\AsyncTestCase;
 use Amp\Websocket\Client;
-
-
-use Bumax\Request;
-use Bumax\Socket\ClientInterface;
-use Bumax\Socket\WebSocketServer as Server;
-use Bumax\Socket\ServerInterface;
-use Bumax\Loop;
-use Monolog\ErrorHandler;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Tests\TestProtocol;
-
 use Amp\Socket;
 use Amp\Socket\ConnectContext;
 //use function Amp\Socket\connect;
+
+use Bumax\Socket\Request;
+use Bumax\Socket\ClientInterface;
+use Bumax\Socket\WebSocketServer as Server;
+use Bumax\Socket\ServerInterface;
+use Bumax\Socket\Loop;
+use Monolog\ErrorHandler;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Tests\Socket\TestProtocol;
+
+
 
 /**
  * Тесты запускаются в Amp\Loop::run()

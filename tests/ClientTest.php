@@ -6,9 +6,9 @@ use Bumax\Socket\Client;
 use Bumax\Socket\ClientInterface;
 use Bumax\Socket\Server;
 use Bumax\Socket\ServerInterface;
-use Bumax\Loop;
-use Bumax\Request;
-use Tests\TestProtocol;
+use Bumax\Socket\Loop;
+use Bumax\Socket\Request;
+use Tests\Socket\TestProtocol;
 
 
 /**
