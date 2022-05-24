@@ -6,7 +6,6 @@ use Amp\Socket\SocketException;
 use function Amp\asyncCall;
 use Amp\Socket\Socket;
 use Amp\Loop;
-use Bumax\Protocol\ProtocolInterface;
 use Amp\Socket\Server as AmpServer;
 use Amp\ByteStream;
 

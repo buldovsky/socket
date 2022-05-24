@@ -1,8 +1,6 @@
 <?php
 
-namespace Bumax\Protocol;
-
-use Bumax\Request;
+namespace Bumax\Socket;
 
 interface ProtocolInterface {
 

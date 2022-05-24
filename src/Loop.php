@@ -1,6 +1,6 @@
 <?php
 
-namespace Bumax;
+namespace Bumax\Socket;
 
 use Amp\Deferred;
 use Amp\Loop as AmpLoop;

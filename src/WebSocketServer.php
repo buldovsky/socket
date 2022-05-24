@@ -10,7 +10,6 @@ use Amp\Http\Server\Response;
 use Amp\Promise;
 use Amp\Success;
 use Amp\Websocket\Client;
-use Bumax\Protocol\ProtocolInterface;
 use Amp\Socket\SocketException;
 use Amp\Socket\Server as AmpServer;
 use Amp\Http\Server\HttpServer;

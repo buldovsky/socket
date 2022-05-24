@@ -2,7 +2,6 @@
 
 namespace Bumax\Socket;
 
-use App\Protocol\ProtocolInterface;
 use Exception;
 
 use App\Socket\Server;

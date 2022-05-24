@@ -1,8 +1,6 @@
 <?php
 namespace Bumax\Socket;
 
-use Bumax\Protocol\ProtocolInterface;
-
 interface ServerInterface {
 
     // function getSockets();

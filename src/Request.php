@@ -1,9 +1,7 @@
 <?php
 
-namespace Bumax;
+namespace Bumax\Socket;
 
-use Bumax\Protocol\ProtocolInterface;
-use Bumax\Socket\ClientInterface;
 use Exception;
 
 class Request

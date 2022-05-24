@@ -1,7 +1,6 @@
 <?php
 namespace Bumax\Socket;
 
-
 use Amp\WebSocket\Client as WSClient;
 use Amp\Websocket\ClosedException;
 use Amp\ByteStream\StreamException;
