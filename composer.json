@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Bumax\\": "src/"
+            "Bumax\\Socket\\": "src/"
         }
     },
     "autoload-dev": {
