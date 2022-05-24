@@ -17,8 +17,6 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Tests\Socket\TestProtocol;
 
-
-
 /**
  * Тесты запускаются в Amp\Loop::run()
  */
