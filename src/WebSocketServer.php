@@ -232,8 +232,7 @@ class WebSocketServer implements ServerInterface, ClientHandler
 
 
                 } catch (ByteStream\ClosedException $e) {
-                    // это очень часто случается, так как люди передающие нам данные
-                    // сами отключаются не успев получить ответ
+                    // если клиенты отключаются заносим в лог
                 }
 
             }

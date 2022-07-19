@@ -1,4 +1,5 @@
 <?php
+
 namespace Bumax\Socket;
 
 use Amp\CancelledException;
@@ -12,6 +13,9 @@ use Amp\ByteStream\StreamException;
 use function Amp\asyncCall;
 use function Amp\Socket\connect;
 
+/**
+ * С помощью этого класса можно подключиться к удаленному сокету
+ */
 class Client implements ClientInterface
 {
     
@@ -34,9 +38,9 @@ class Client implements ClientInterface
 
                 });
             } catch (CancelledException $e) {
-                throw new \Exception("Connection cancelled. {$e-> getMessage()}");
+                throw new Exception("Connection cancelled. {$e-> getMessage()}");
             } catch (ConnectException $e) {
-                throw new \Exception("Connection error. {$e-> getMessage()}");
+                throw new Exception("Connection error. {$e-> getMessage()}");
             }
         } else {
 
@@ -46,6 +50,11 @@ class Client implements ClientInterface
 
     }
 
+    /**
+     * Добавляем обработчик подключения пользователя
+     * @param callable|null $callable
+     * @return $this|Promise
+     */
     function onConnect(callable $callable = null)
     {
         if(!isset($callable)) return $this-> connectPromise;
@@ -54,23 +63,42 @@ class Client implements ClientInterface
         return $this;
     }
 
+    /**
+     * Возвращаем сокет к которому мы подключились
+     * @return ServerInterface
+     */
     function getServer():ServerInterface
     {
         return $this->server;
     }
 
+    /**
+     * Возвращаем локальный хост
+     * @return string
+     * @throws Exception
+     */
     function getHost():string
     {
         $this-> checkSocket();
         return $this-> socket-> getLocalAddress()-> getHost();
     }
 
+    /**
+     * Возвращаем локальный порт
+     * @return int
+     * @throws Exception
+     */
     function getPort():int
     {
         $this-> checkSocket();
         return $this-> socket-> getLocalAddress()-> getPort();
     }
 
+    /**
+     * Читаем из сокета
+     * @param callable|object $callback
+     * @return $this
+     */
     function read(callable|object $callback):self
     {
         $this-> readHandlers []= $callback;
@@ -96,20 +124,26 @@ class Client implements ClientInterface
         return $this;
     }
 
+    /**
+     * Пишем в сокет
+     * @param string $str
+     * @return Promise
+     * @throws Exception
+     */
     function write(string $str)
     {
         $this-> checkSocket();
         try {
             return $this->socket->write($str);
         } catch (ClosedException|StreamException $e) {
-            throw new \Exception("Can not write to socket. {$e-> getMessage()}");
+            throw new Exception("Can not write to socket. {$e-> getMessage()}");
         }
     }
 
     /**
-     * write + close
+     * Пишем всокет и завершаем соединение
      * @param string $str
-     * @throws \Exception
+     * @throws Exception
      */
     function end(string $str)
     {
@@ -117,6 +151,11 @@ class Client implements ClientInterface
         $this-> close();
     }
 
+    /**
+     * Завершаем соединение
+     * @return void
+     * @throws Exception
+     */
     function close()
     {
         $this-> checkSocket();
@@ -124,11 +163,12 @@ class Client implements ClientInterface
     }
 
     /**
-     * @throws \Exception
+     * Метод проверяет, что подключение установлено
+     * @throws Exception
      */
     private function checkSocket()
     {
         if(!isset($this-> socket))
-            throw new \Exception('Дождитесь установления подкючения');
+            throw new Exception('Дождитесь установления подключения');
     }
 }

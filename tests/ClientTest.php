@@ -8,7 +8,7 @@ use Bumax\Socket\Server;
 use Bumax\Socket\ServerInterface;
 use Bumax\Socket\Loop;
 use Bumax\Socket\Request;
-use Tests\Socket\TestProtocol;
+use Bumax\Socket\TestProtocol;
 
 
 /**

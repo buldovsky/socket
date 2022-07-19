@@ -4,6 +4,7 @@ namespace Tests\Socket;
 use Amp\PHPUnit\AsyncTestCase;
 use Amp\Socket;
 use Amp\Socket\ConnectContext;
+use Bumax\Socket\ProxyServer;
 use function Amp\Socket\connect;
 
 use Bumax\Socket\Request;
@@ -19,9 +20,20 @@ use Tests\Socket\TestProtocol;
 class ProxyServerTest extends AsyncTestCase
 {
 
-    function testTest()
+    public function testStart()
     {
-        $this-> assertFalse(false);
+        $this->setTimeout(2000);
+        $this->expectOutputString("Test proxy server is started...");
+
+        (new ProxyServer())
+            -> listen('127.0.0.1', 12345)
+            -> proxy('127.0.0.1', 31234)
+            -> onStart(function(){
+                echo "Test proxy server is started...";
+                Loop::stop();
+            })
+            -> start()
+        ;
     }
 
 }

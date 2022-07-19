@@ -12,10 +12,8 @@ use Bumax\Socket\ClientInterface;
 use Bumax\Socket\WebSocketServer as Server;
 use Bumax\Socket\ServerInterface;
 use Bumax\Socket\Loop;
-use Monolog\ErrorHandler;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Tests\Socket\TestProtocol;
+use Bumax\Socket\TestProtocol;
+use Bumax\Socket\TestLogger as Logger;
 
 /**
  * Тесты запускаются в Amp\Loop::run()
@@ -28,7 +26,7 @@ class WebSocketServerTest extends AsyncTestCase
         $this->expectOutputString("Test server is started...");
 
 
-        (new Server(new Logger('testwebsocket')))
+        (new Server(new Logger))
             -> listen('127.0.0.1')
             -> onStart(function(){
                 echo "Test server is started...";
@@ -43,7 +41,7 @@ class WebSocketServerTest extends AsyncTestCase
         $this->setTimeout(2000);
         $this->expectOutputRegex('/[0-9]{4,5}$/');
 
-        (new Server(new Logger('testwebsocket')))
+        (new Server(new Logger))
             -> listen('127.0.0.1')
             -> onStart(function(ServerInterface $server){
                 echo $server-> getPort();
@@ -59,7 +57,7 @@ class WebSocketServerTest extends AsyncTestCase
         // сработает Permission denied
         $this-> expectException(\Exception::class);
 
-        (new Server(new Logger('testwebsocket')))
+        (new Server(new Logger))
             -> listen('127.0.0.1', 22)
             -> start()
         ;
@@ -70,7 +68,7 @@ class WebSocketServerTest extends AsyncTestCase
         $this->setTimeout(2000);
 
         // create a log channel
-        $log = new Logger('name');
+        $log = new Logger;
         //$log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
         $host = '127.0.0.1';
@@ -102,14 +100,7 @@ class WebSocketServerTest extends AsyncTestCase
         $this-> expectException(\Exception::class);
 
         // create a log channel
-        $log = new Logger('name');
-        $errorHandler = new StreamHandler('php://stdout', Logger::DEBUG);
-        $log->pushHandler($errorHandler);
-        $log->setExceptionHandler(function($e){
-            throw $e;
-        });
-
-        $log->error('2222222222222');
+        $log = new Logger;
 
         $host = '127.0.0.1';
         $server = (new Server($log))
@@ -131,7 +122,7 @@ class WebSocketServerTest extends AsyncTestCase
     {
         $this->setTimeout(2000);
 
-        $log = new Logger('name');
+        $log = new Logger;
         //$log->pushHandler(new StreamHandler('php://stdout', Logger::DEBUG));
 
         $host = '127.0.0.1';

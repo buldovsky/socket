@@ -2,18 +2,18 @@
 
 namespace Bumax\Socket;
 
-use Exception;
-
-use App\Socket\Server;
-use Amp\Socket\ConnectContext;
 use Amp\Socket\Server as AmpServer;
+use Amp\Socket\ConnectContext;
 use Amp\Socket\Socket;
 use Amp\Socket\SocketException;
 use Amp\ByteStream;
 use function Amp\asyncCall;
 use function Amp\Socket\connect;
 
-class ProxyServer extends Server implements ServerInterface
+/**
+ * Проксирующий сокет
+ */
+class ProxyServer extends Server
 {
 
     static array $loopHandlers = [];
@@ -21,21 +21,22 @@ class ProxyServer extends Server implements ServerInterface
     protected array $clients = [];
     protected array $handlers = [];
 
-    protected array $onStartHandlers = [];
-    protected array $clientConnectHandlers = [];
-    protected array $clientDisconnectHandlers = [];
     protected AmpServer $server;
 
     protected array $listenHandlers = [];
-    private string $host;
-    private int $port;
     private string $proxyHost;
     private int $proxyPort;
 
     protected ClientInterface $destination;
     protected ClientInterface $source;
 
-
+    /**
+     * @param callable|object $handler
+     * @param ProtocolInterface|null $protocol
+     * @param callable|null $clientHandler
+     * @param ProtocolInterface|null $responseProtocol
+     * @return $this
+     */
     function handler(
         callable|object     $handler,
         ProtocolInterface   $protocol = null,
@@ -47,34 +48,12 @@ class ProxyServer extends Server implements ServerInterface
         return $this;
     }
 
-    public function onStart(callable $callable):self
-    {
-        $this->onStartHandlers []= $callable;
-        return $this;
-    }
 
-    function onClientConnect(callable $callable):self
-    {
-        $this->clientConnectHandlers []= $callable;
-        return $this;
-    }
-
-    public function onClientDisconnect(callable $callable):self
-    {
-        $this->clientDisconnectHandlers []= $callable;
-        return $this;
-    }
-
-
-    function listen(string $host, int $port = 0):self
-    {
-
-        $this-> host = $host;
-        $this-> port = $port;
-
-        return $this;
-    }
-
+    /**
+     * @param string $host
+     * @param int $port
+     * @return $this
+     */
     function proxy(string $host, int $port): self
     {
         $this-> proxyHost = $host;
@@ -82,19 +61,25 @@ class ProxyServer extends Server implements ServerInterface
         return $this;
     }
 
-
+    /**
+     * @return iterable
+     * @throws Exception
+     * @throws SocketException
+     * @throws \Amp\CancelledException
+     */
     function run(): iterable
     {
 
         try {
 
             // открываем произвольный порт для telnet
-            $this->server = AmpServer::listen($this->host . ":" . $this->port);
-            //$proxy = new ProxyConnection($server);
+            $this->server = AmpServer::listen("{$this->host}:{$this->port}");
+
+            if(isset($this->onStartHandler)) asyncCall($this->onStartHandler, $this);
 
             try {
 
-                $destinationSocket = yield connect($this->proxyHost . ':' . $this->proxyPort, (new ConnectContext));
+                $destinationSocket = yield connect("{$this->proxyHost}:{$this->proxyPort}", (new ConnectContext));
                 // сохраняем подключение к устройству, чтобы потом закрыть
                 //$proxy-> setDeviceConnection($deviceConnection);
                 $this->destination = new Client($this, $destinationSocket);
@@ -136,18 +121,12 @@ class ProxyServer extends Server implements ServerInterface
                 });
 
             } catch (Socket\ConnectException $e) {
-                throw new \Exception('Can not connect to device', 4);
+                throw new Exception('Can not connect to device', 4);
             }
 
         } catch (SocketException $e) {
-            throw new \Exception('Can listen port', 5);
+            throw new Exception('Can not listen port', 5);
         }
-
-
-        $this->server = AmpServer::listen($this->host . ':' . $this->port);
-
-        foreach ($this->onStartHandlers as $handler) $handler($this);
-
 
         /**
          * обрабатываем все подключения
@@ -172,9 +151,9 @@ class ProxyServer extends Server implements ServerInterface
                      */
                     foreach ($this->handlers as list($callable, $protocol, $responseProtocol)) {
 
-                        // если протоколы не указаны
+                        // если протокол не определен
                         if (!isset($protocol)) {
-                            // работаем со строками
+                            // работаем со текствой строкой
                             $callable($chunk, $client);
                             break;
                         }
@@ -187,19 +166,18 @@ class ProxyServer extends Server implements ServerInterface
 
                         try {
                             asyncCall([$request, 'handle'], $callable, $client);
-                            //$i = 0; do {
-                            //    $callable = $request->handle($callable, $client);
-                            //} while(is_callable($callable) && $i++ < 5);
+                            /** @todo сделать поддержку вложенных обработчиков */
                         } catch (Exception $e) {
-                            //
+                            throw $e;
                         }
                         break;
                     }
                 }
 
             } catch (ByteStream\ClosedException $e) {
-                // это очень часто случается, так как люди передающие нам данные
-                // сами отключаются не успев получить ответ
+
+                // если клиенты отключаются заносим в лог
+
             }
         }
 

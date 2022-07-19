@@ -8,7 +8,6 @@ use Amp\Success;
 use function Amp\asyncCall;
 use function Amp\call;
 
-
 class Loop
 {
 
@@ -41,7 +40,7 @@ class Loop
     }
 
     /**
-     * Останавливаем основную петлю
+     * Останавливаем главную петлю
      * @return void
      */
     static function stop()

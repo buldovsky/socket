@@ -19,21 +19,44 @@ class Request
 
     }
 
+    /**
+     * Возвращаем мета-данные запроса
+     * @param string $key
+     * @return mixed
+     */
     function getMetaData(string $key):mixed
     {
         return $this->metaData[$key] ?? null;
     }
 
+    /**
+     * Устанавливаем мета-данные запроса
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     */
     function setMetaData(string $key, mixed $value):self
     {
         $this->metaData[$key] = $value;
         return $this;
     }
 
+    /**
+     * Возвращаем данные запроса
+     * @return object|array
+     */
     function data():object|array{
         return $this-> data;
     }
 
+    /**
+     * Вызываем обработчик запроса
+     * @param callable $callable
+     * @param ClientInterface|null $client
+     * @param ProtocolInterface|null $responseProtocol
+     * @return false|mixed
+     * @throws Exception
+     */
     function handle(callable $callable, ClientInterface $client = null, ProtocolInterface $responseProtocol = null)
     {
         $this-> client = $client;

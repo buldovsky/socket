@@ -9,13 +9,12 @@ use Amp\Loop;
 use Amp\Socket\Server as AmpServer;
 use Amp\ByteStream;
 
-use Exception;
 
 class Server implements ServerInterface
 {
 
-    private string $host;
-    private int $port;
+    protected string $host;
+    protected int $port;
 
     protected AmpServer $server;
     protected mixed $onStartHandler;
@@ -64,25 +63,41 @@ class Server implements ServerInterface
         return $this;
     }
 
+    /**
+     * @param callable $callable
+     * @return $this
+     */
     public function onStart(callable $callable):self
     {
         $this->onStartHandler = $callable;
         return $this;
     }
 
+    /**
+     * @param callable $callable
+     * @return $this
+     */
     public function onConnect(callable $callable):self
     {
         $this->clientConnectHandlers []= $callable;
         return $this;
     }
 
+    /**
+     * @param callable $callable
+     * @return $this
+     */
     public function onDisconnect(callable $callable):self
     {
         $this->clientDisconnectHandlers []= $callable;
         return $this;
     }
 
-
+    /**
+     * @param string $host
+     * @param int $port
+     * @return $this
+     */
     function listen(string $host, int $port = 0):self
     {
 
@@ -92,6 +107,9 @@ class Server implements ServerInterface
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     function start():self
     {
         asyncCall([$this, 'run']);
@@ -204,8 +222,9 @@ class Server implements ServerInterface
                 }
 
             } catch (ByteStream\ClosedException $e) {
-                // это очень часто случается, так как люди передающие нам данные
-                // сами отключаются не успев получить ответ
+
+                // если клиенты отключаются заносим в лог
+
             }
         }
 
